@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cczu.zxks.mapper.StudentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cczu.zxks.entity.Student">
+        <id column="student_id" property="student_id" />
+        <result column="student_account" property="student_account" />
+        <result column="student_password" property="student_password" />
+        <result column="student_realname" property="student_realname" />
+        <result column="student_age" property="student_age" />
+        <result column="student_class" property="student_class" />
+        <result column="student_state" property="student_state" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        student_id, student_account, student_password, student_realname, student_age, student_class, student_state
+    </sql>
+
+    <select id="selectList" parameterType="cn.edu.cczu.zxks.entity.Student" resultType="map">
+        SELECT a.student_id as studentId,a.student_account as studentAccount,a.student_realname as studentRealname,a.student_age as studentAge,b.class_name as studentPassword FROM
+        tb_student AS a ,
+        tb_class AS b
+        where
+        <if test="student.studentAccount != '' and student.studentAccount != null">
+            a.student_account = #{student.studentAccount,jdbcType=VARCHAR}and
+        </if>
+        <if test="student.studentRealname != '' and student.studentRealname != null">
+            a.student_realname like concat('%', #{student.studentRealname,jdbcType=VARCHAR}, '%') and
+        </if>
+        <if test="student.studentClass != null and student.studentClass!=0">
+            a.student_class = #{student.studentClass,jdbcType=INTEGER}  and
+        </if>
+        a.student_class=b.class_id and a.student_state=0
+    </select>
+
+    <select id="login" resultType="cn.edu.cczu.zxks.entity.Student">
+        select * from tb_student where student_account=#{username} and student_password = #{password}
+        and student_state=0
+    </select>
+
+    <select id="selecStuList" resultType="cn.edu.cczu.zxks.entity.Student">
+        select * from tb_student where student_class=#{classId}
+    </select>
+
+
+
+
+
+
+</mapper>

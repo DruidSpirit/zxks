@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cczu.zxks.mapper.TestQuestionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cczu.zxks.entity.TestQuestion">
+        <id column="id" property="id" />
+        <result column="test_id" property="testId" />
+        <result column="question_id" property="questionId" />
+        <result column="question_sorce" property="questionSorce" />
+        <result column="test_question_state" property="testQuestionState" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, test_id, question_id, question_sorce, test_question_state
+    </sql>
+
+    <select id="selectoptList" resultType="cn.edu.cczu.zxks.entity.Question">
+      SELECT a.question_id AS questionId , a.question_name AS questionName ,a.question_option_a AS questionOptionA
+      ,a.question_option_b AS questionOptionB,a.question_option_c AS questionOptionC ,a.question_option_d AS questionOptionD
+       ,a.question_realanswer AS questionRealanswer,b.question_sorce AS questionType
+       FROM tb_question as a LEFT JOIN tb_test_question as b on a.question_id=b.question_id
+       WHERE b.test_id=#{testId} and a.question_state=0 AND question_type=1
+    </select>
+
+    <select id="selecttianList" resultType="cn.edu.cczu.zxks.entity.Question">
+      SELECT a.question_id AS questionId , a.question_name AS questionName ,a.question_option_a AS questionOptionA
+      ,a.question_option_b AS questionOptionB,a.question_option_c AS questionOptionC ,a.question_option_d AS questionOptionD
+       ,a.question_realanswer AS questionRealanswer,b.question_sorce AS questionType
+       FROM tb_question as a LEFT JOIN tb_test_question as b on a.question_id=b.question_id
+       WHERE b.test_id=#{testId} and a.question_state=0 AND question_type=2
+    </select>
+
+
+</mapper>

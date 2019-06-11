@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/leyu.css" />
+
+    <script src="../../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/leyu.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+
+<!--主体标题-->
+<div class="breadcrumbs" id="breadcrumbs" >
+    <ul class="breadcrumb">
+        <li><a href="/admin/gowelcome">首页</a></li>
+        <li>题目管理</li>
+    </ul>
+</div>
+<!--主体标题-->
+
+<div class="page-content"  id="app" style="height: 547.3px">
+    <div class="page-header">
+        <h1>添加题目</h1>
+    </div>
+    <div class="row">
+
+        <form class="form-horizontal" role="form" id="form" action="/question/insertload" method="post">
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 类 型 </label>
+
+                <div class="col-sm-9">
+                    <select name="questionType" v-model="questionType"   class="col-xs-10 col-sm-5" >
+                        <option value="0">请选择类型</option>
+                        <option value="1">选择题</option>
+                        <option value="2">填空题</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 题目 </label>
+
+                <div class="col-sm-9">
+                    <input type="text"  placeholder="请输入问题" name="questionName" class="col-xs-10 col-sm-5"/>
+                </div>
+            </div>
+            <div class="showOption" v-show="showOption">
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" > 选项A </label>
+
+                <div class="col-sm-9">
+                    <input type="text"  placeholder="请输入选项A" name="questionOptionA" class="col-xs-10 col-sm-5" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" > 选项B </label>
+
+                <div class="col-sm-9">
+                    <input type="text"  placeholder="请输入选项B" name="questionOptionB" class="col-xs-10 col-sm-5" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" > 选项C </label>
+
+                <div class="col-sm-9">
+                    <input type="text"  placeholder="请输入选项C" name="questionOptionC" class="col-xs-10 col-sm-5" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" > 选项D </label>
+
+                <div class="col-sm-9">
+                    <input type="text"  placeholder="请输入选项D" name="questionOptionD" class="col-xs-10 col-sm-5" />
+                </div>
+            </div>
+            </div>
+
+
+
+
+
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" >答 案 </label>
+
+                <div class="col-sm-9">
+                    <input type="text"  placeholder="请输入答案" name="questionRealanswer" class="col-xs-10 col-sm-5" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 学 科 </label>
+
+                <div class="col-sm-9">
+                    <select name="questionSubject"  class="col-xs-10 col-sm-5">
+                        <option value="0">请选择学科</option>
+                        <option th:each="sub,iterStat:${subList}" th:value="${sub.subjectId}" th:text="${sub.subjectName}"></option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button class="btn btn-info" type="button" onclick="onSearch()">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+
+                    &nbsp; &nbsp; &nbsp;
+                    <button class="btn" type="reset">
+                        <i class="ace-icon fa fa-undo bigger-110"></i>
+                        取消
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+
+<script>
+    var vm=new Vue({
+        el:'#app',
+        data:{
+            questionType:'0',
+            showOption:true,
+        },
+        watch:{
+            questionType:function () {
+                var  _this=this;
+
+                if(_this.questionType==2){
+                    _this.showOption=false;
+                }else{
+                    _this.showOption=true;
+                }
+            }
+        },
+        methods:{
+        }
+
+    })
+
+
+    function onSearch() {
+        $("#form").submit();
+    }
+
+</script>
+</html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cczu.zxks.mapper.TeacherMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cczu.zxks.entity.Teacher">
+        <id column="teacher_id" property="teacherId" />
+        <result column="teacher_account" property="teacherAccount" />
+        <result column="teacher_password" property="teacherPassword" />
+        <result column="teacher_realname" property="teacherRealname" />
+        <result column="teacher_phone" property="teacherPhone" />
+        <result column="teacher_state" property="teacherState" />
+        <result column="teacher_subject" property="teacherSubject" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        teacher_id, teacher_account, teacher_password, teacher_realname, teacher_phone, teacher_state, teacher_subject
+    </sql>
+
+    <select id="selectList" parameterType="cn.edu.cczu.zxks.entity.Teacher" resultType="map">
+        SELECT a.teacher_id as teacherId,a.teacher_account as teacherAccount,a.teacher_realname as teacherRealname,a.teacher_phone as teacherPhone,b.subject_name as teacherPassword FROM
+        tb_teacher AS a ,
+        tb_subject AS b
+        where
+        <if test="teacher.teacherAccount != '' and teacher.teacherAccount  != null">
+            a.teacher_account = #{teacher.teacherAccount,jdbcType=VARCHAR}and
+        </if>
+        <if test="teacher.teacherRealname != '' and teacher.teacherRealname != null">
+            a.teacher_realname like concat('%', #{teacher.teacherRealname,jdbcType=VARCHAR}, '%') and
+        </if>
+        <if test="teacher.teacherSubject != null and teacher.teacherSubject!=0">
+            a.teacher_subject = #{teacher.teacherSubject,jdbcType=INTEGER}  and
+        </if>
+        a.teacher_subject=b.subject_id and a.teacher_state=0
+    </select>
+
+    <select id="login" resultType="cn.edu.cczu.zxks.entity.Teacher">
+        select * from tb_teacher where teacher_account=#{username} and teacher_password = #{password}
+        and teacher_state=0
+    </select>
+
+</mapper>

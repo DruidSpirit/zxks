@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cczu.zxks.mapper.QuestionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cczu.zxks.entity.Question">
+        <id column="question_id" property="question_id" />
+        <result column="question_name" property="question_name" />
+        <result column="question_option_a" property="question_option_a" />
+        <result column="question_option_b" property="question_option_b" />
+        <result column="question_option_c" property="question_option_c" />
+        <result column="question_option_d" property="question_option_d" />
+        <result column="question_realanswer" property="question_realanswer" />
+        <result column="question_type" property="question_type" />
+        <result column="question_subject" property="question_subject" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        question_id, question_name, question_option_a, question_option_b, question_option_c, question_option_d, question_realanswer, question_type, question_subject
+    </sql>
+
+    <select id="selectList" parameterType="cn.edu.cczu.zxks.entity.Question" resultType="map">
+        SELECT a.question_id as questionId,a.question_name as questionName,a.question_realanswer as questionRealanswer,a.question_type as questionType,b.subject_name as questionOptionA FROM
+        tb_question AS a ,
+        tb_subject AS b
+        where
+        <if test="question.questionName != '' and question.questionName != null">
+            a.question_name like concat('%', #{question.questionName,jdbcType=VARCHAR}, '%') and
+        </if>
+        <if test="question.questionType != 0 and question.questionType != null">
+            a.question_type = #{question.questionType,jdbcType=INTEGER}  and
+        </if>
+        <if test="question.questionSubject != null and question.questionSubject !=0">
+            a.question_subject = #{question.questionSubject,jdbcType=INTEGER}  and
+        </if>
+        a.question_subject=b.subject_id and a.question_state=0
+    </select>
+
+    <select id="selectXuanZe" resultType="cn.edu.cczu.zxks.entity.Question">
+        SELECT * from tb_question WHERE question_subject=#{subjectId} and question_type=1  ORDER BY RAND() LIMIT #{pageSize1}
+    </select>
+
+    <select id="selectTianKong" resultType="cn.edu.cczu.zxks.entity.Question">
+        SELECT * from tb_question WHERE question_subject=#{subjectId} and question_type=2  ORDER BY RAND() LIMIT #{pageSize2}
+    </select>
+
+    <select id="selectoptList" resultType="cn.edu.cczu.zxks.entity.Question">
+      SELECT a.question_id AS questionId , a.question_name AS questionName ,a.question_option_a AS questionOptionA
+      ,a.question_option_b AS questionOptionB,a.question_option_c AS questionOptionC ,a.question_option_d AS questionOptionD
+       ,a.question_realanswer AS questionRealanswer,b.question_sorce AS questionType
+       FROM tb_question as a LEFT JOIN tb_test_question as b on a.question_id=b.question_id
+       WHERE b.test_id=#{testId} and a.question_state=0 AND question_type=1
+    </select>
+
+
+
+</mapper>

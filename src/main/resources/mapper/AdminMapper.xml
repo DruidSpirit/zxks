@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cczu.zxks.mapper.AdminMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cczu.zxks.entity.Admin">
+        <id column="admin_id" property="admin_id" />
+        <result column="admin_account" property="admin_account" />
+        <result column="admin_password" property="admin_password" />
+        <result column="admin_phone" property="admin_phone" />
+        <result column="admin_state" property="admin_state" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        admin_id, admin_account, admin_password, admin_phone, admin_state
+    </sql>
+
+</mapper>

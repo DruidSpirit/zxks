@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../../css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/leyu.css" />
+
+    <script src="../../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../js/leyu.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+
+<!--主体标题-->
+<div class="breadcrumbs" id="breadcrumbs">
+    <ul class="breadcrumb">
+        <li><a href="home">首页</a></li>
+        <li>管理员中心</li>
+    </ul>
+</div>
+<!--主体标题-->
+
+<div class="page-content" id="app">
+    <div class="page-header">
+        <h1>修改密码</h1>
+    </div>
+    <div class="row">
+
+        <form class="form-horizontal" role="form" id="form" action="/student/updatePwdAfter" method="post" target="_parent">
+
+            <div class="form-group" hidden>
+                <label class="col-sm-3 control-label no-padding-right"> ID </label>
+
+                <div class="col-sm-9">
+                    <input type="text"  placeholder="ID" name="studentId" class="col-xs-10 col-sm-5" th:value="${student.studentId}"/>
+                </div>
+                <div class="col-sm-9">
+                    <input type="text"  placeholder="ID" name="pwd" class="col-xs-10 col-sm-5" th:value="${student.studentPassword}"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right"> 原密码 </label>
+
+                <div class="col-sm-9">
+                    <input type="password"  placeholder="请输入原密码" name="Password" v-model="Password" class="col-xs-10 col-sm-5"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" > 新密码</label>
+
+                <div class="col-sm-9">
+                    <input type="password"  placeholder="请输入新密码" name="studentPassword" v-model="newpwd" class="col-xs-10 col-sm-5" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" >确认新密码 </label>
+
+                <div class="col-sm-9">
+                    <input type="password"  placeholder="请确认新密码"  v-model="newpwd1"  class="col-xs-10 col-sm-5" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <button class="btn btn-info" type="button"  @click="onSearch()">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+
+                    &nbsp; &nbsp; &nbsp;
+                    <input type="button" class="btn" value="取消" onclick="javascript:history.back(-1);" >
+                    <i class="ace-icon fa fa-undo bigger-110"></i>
+                    </input>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+
+<script th:inline="javascript">
+    var vm=new Vue({
+        el:'#app',
+        data:{
+            queType:'0',
+            showOption:true,
+            pwd:'',
+            Password:'',
+            newpwd:'',
+            newpwd1:'',
+
+        },
+        watch:{
+
+        },
+        created:function() {
+            this.init();
+        },
+        methods:{
+            init:function () {
+                var  _this=this;
+                _this.pwd=[[${student.studentPassword}]];
+            },
+            onSearch(){
+                if(this.pwd!=this.Password){
+                    alert('原密码不匹配');
+                    return  false;
+                }
+                if(this.newpwd==null||this.newpwd==''){
+                    alert('新密码不能为空')
+                    return false;
+                }
+                if(this.newpwd!==this.newpwd1){
+                    alert('新密码和确认密码不匹配')
+                    return false;
+                }
+                $("#form").submit();
+            }
+        }
+
+    })
+
+</script>
+</html>

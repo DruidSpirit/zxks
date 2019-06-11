@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../css/font-awesome.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css" />
+
+		<script src="../../js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/leyu.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			.mynav li{
+				padding: 0 20px;
+				/* margin-right: 40px; */
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<nav class="navbar navbar-default navbar-inverse" style="border-radius: 0 !important;">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">在线考试系统</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav mynav"   style="margin-left: 200px !important;">
+              <li class="active"><a href="/test-student/gostudenttest">我的考试</a></li>
+			  <li ><a href="/score/selectScore">历史考试</a></li>
+
+			  <!--<li ><a href="#">Link</a></li>
+			  <li ><a href="#">Link</a></li>-->
+
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">[[${session.student.studentRealname}]] <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/login/logout" onClick="return confirm('确定注销吗?');"><i class="icon-off"></i> 注销</a></li>
+			  <li><a href="#" data-toggle="modal" data-target="#myModal">修改密码</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+			
+		</div>
+		
+		<!-- 主体
+		 -->
+		<div class="container"  id="app">
+			<div class="row" >
+				
+				<div class="col-xs-4" th:each="tes,iterStat:${tesList}">
+					 <div class="thumbnail">
+						  <!-- <img src="..." alt="..."> -->
+						  <div class="caption">
+							<h3>标题：[[${tes.testTitle}]]</h3>
+
+							  <p >学科：[[${tes.testSubject1}]]</p>
+							  <p >开始时间：[[${tes.testStarttime}]]</p>
+							  <p >结束时间：[[${tes.testEndtime}]]</p>
+
+
+							<p>
+								<a href="javascript:void(0);" th:href="@{'/test-question/gostutestquestion?id='+${tes.testId}}" class="btn btn-primary" role="button">立即考试</a>
+							
+								<!--<a href="#" class="btn btn-default" role="button">Button</a></p>-->
+						  </div>
+						</div>
+				</div>
+				<div style="margin: auto;text-align: center" th:if="${tesList.isEmpty()}">
+					<div style="background:#fff;" >
+							<span style="margin: auto;text-align: center;">暂时没有考试！</span>
+
+					</div>
+				</div>
+
+				<!-- Modal -->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="myModalLabel">修改密码</h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+
+									<form class="form-horizontal" role="form" id="form" action="/student/updatePwdAfter" method="post" target="_parent">
+
+										<div class="form-group" hidden>
+											<label class="col-sm-3 control-label no-padding-right"> ID </label>
+
+											<div class="col-sm-9">
+												<input type="text"  placeholder="ID" name="studentId" class="col-xs-10 col-sm-5" th:value="${session.student.studentId}"/>
+											</div>
+											<div class="col-sm-9">
+												<input type="text"  placeholder="ID" name="pwd" class="col-xs-10 col-sm-5" th:value="${session.student.studentPassword}"/>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right"> 原密码 </label>
+
+											<div class="col-sm-9">
+												<input type="password"  placeholder="请输入原密码" name="Password" v-model="Password" class="col-xs-10 col-sm-5"/>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" > 新密码</label>
+
+											<div class="col-sm-9">
+												<input type="password"  placeholder="请输入新密码" name="studentPassword" v-model="newpwd" class="col-xs-10 col-sm-5" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" >确认新密码 </label>
+
+											<div class="col-sm-9">
+												<input type="password"  placeholder="请确认新密码"  v-model="newpwd1"  class="col-xs-10 col-sm-5" />
+											</div>
+										</div>
+
+										<div class="form-group">
+											<div class="col-md-offset-3 col-md-9">
+												<button class="btn btn-info" type="button"  @click="onSearch()">
+													<i class="ace-icon fa fa-check bigger-110"></i>
+													提交
+												</button>
+
+												&nbsp; &nbsp; &nbsp;
+												<!--<input type="button" class="btn" value="取消" onclick="javascript:history.back(-1);" >
+                                                <i class="ace-icon fa fa-undo bigger-110"></i>
+                                                </input>-->
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<!--modal-->
+
+
+
+			</div>
+		</div>
+		
+		
+	</body>
+
+	<script th:inline="javascript">
+		var vm=new Vue({
+			el:'#app',
+			data:{
+				queType:'0',
+				showOption:true,
+				pwd:'',
+				Password:'',
+				newpwd:'',
+				newpwd1:'',
+
+			},
+			watch:{
+
+			},
+			created:function() {
+				this.init();
+			},
+			methods:{
+				init:function () {
+					var  _this=this;
+					_this.pwd=[[${session.student.studentPassword}]];
+				},
+				onSearch(){
+					if(this.pwd!=this.Password){
+						alert('原密码不匹配');
+						return  false;
+					}
+					if(this.newpwd==null||this.newpwd==''){
+						alert('新密码不能为空')
+						return false;
+					}
+					if(this.newpwd!==this.newpwd1){
+						alert('新密码和确认密码不匹配')
+						return false;
+					}
+					$("#form").submit();
+				}
+			}
+
+		})
+
+	</script>
+</html>

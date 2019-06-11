@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cczu.zxks.mapper.ScoreMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cczu.zxks.entity.Score">
+        <id column="score_id" property="score_id" />
+        <result column="score_student" property="score_student" />
+        <result column="score_subject" property="score_subject" />
+        <result column="score_score" property="score_score" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        score_id, score_student, score_subject, score_score
+    </sql>
+
+    <select id="selectScore" resultType="cn.edu.cczu.zxks.entity.Score">
+        SELECT tb_score.score_id as scoreId, tb_score.score_score,tb_subject.subject_name
+        ,tb_test.test_title,tb_test_student.student_id as scoreStudent
+        from tb_score
+        LEFT JOIN tb_test ON tb_test.test_id=tb_score.score_test
+        LEFT JOIN tb_subject on tb_subject.subject_id=tb_score.score_subject
+        LEFT JOIN tb_test_student ON tb_test_student.student_id=tb_score.score_student
+        WHERE tb_test_student.test_student_state>0 AND tb_score.score_student=#{studentId}
+        group by tb_score.score_id
+    </select>
+
+    <!--老师查看学生成绩-->
+    <select id="selectList" parameterType="cn.edu.cczu.zxks.entity.ScorePram" resultType="map">
+        SELECT test.test_title AS testTitle,score.score_score AS scoreScore,
+        student.student_realname AS studentName,sub.subject_name AS subjectName,
+        cla.class_name AS className
+        FROM tb_score AS score
+        LEFT JOIN tb_test AS test ON score.score_test=test.test_id
+        LEFT JOIN tb_student AS student ON score.score_student=student.student_id
+        LEFT JOIN tb_subject AS sub ON sub.subject_id=score.score_subject
+        LEFT JOIN tb_class AS cla ON cla.class_id=student.student_class
+        WHERE
+        <if test="scorePram.studentAccount != '' and scorePram.studentAccount != null">
+            student.student_account = #{scorePram.studentAccount,jdbcType=VARCHAR}and
+        </if>
+        <if test="scorePram.studentRealname != '' and scorePram.studentRealname != null">
+            student.student_realname like concat('%', #{scorePram.studentRealname,jdbcType=VARCHAR}, '%') and
+        </if>
+        <if test="scorePram.studentClass != null and scorePram.studentClass!=0">
+            student.student_class = #{scorePram.studentClass,jdbcType=INTEGER}  and
+        </if>
+        score.score_subject=#{scorePram.teacherSubject} and test.test_teacher=#{scorePram.teacherId}
+        ORDER BY cla.class_id
+    </select>
+
+
+</mapper>

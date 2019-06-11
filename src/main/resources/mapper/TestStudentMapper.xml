@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cczu.zxks.mapper.TestStudentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cczu.zxks.entity.TestStudent">
+        <id column="id" property="id" />
+        <result column="student_id" property="studentId" />
+        <result column="test_id" property="testId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, student_id, test_id
+    </sql>
+    <update id="updateTesStu">
+        update tb_test_student
+        set test_student_state=1
+        where  student_id=#{studentId} and test_id=#{testId}
+    </update>
+
+
+
+
+</mapper>

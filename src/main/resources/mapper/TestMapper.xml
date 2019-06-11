@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.cczu.zxks.mapper.TestMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.edu.cczu.zxks.entity.Test">
+        <id column="test_id" property="test_id" />
+        <result column="test_title" property="test_title" />
+        <result column="test_starttime" property="test_starttime" />
+        <result column="test_endtime" property="test_endtime" />
+        <result column="test_subject" property="test_subject" />
+        <result column="test_teacher" property="test_teacher" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        test_id, test_title, test_starttime, test_endtime, test_subject, test_teacher
+    </sql>
+
+    <select id="selectList" parameterType="cn.edu.cczu.zxks.entity.Test" resultType="cn.edu.cczu.zxks.entity.Test">
+        SELECT a.test_id as testId,a.test_title as testTitle,a.test_starttime as testStarttime,a.test_endtime as testEndtime,
+        b.class_name as testClass1,c.subject_name as testSubject1
+        FROM tb_test AS a
+        LEFT JOIN tb_class AS b ON a.test_class=b.class_id
+        LEFT JOIN tb_subject AS c ON a.test_subject=c.subject_id
+        LEFT JOIN tb_teacher As d on a.test_teacher=d.teacher_id
+        where
+        <if test="test.testTitle != '' and test.testTitle != null">
+            a.test_title like concat('%', #{test.testTitle,jdbcType=VARCHAR}, '%') and
+        </if>
+        <if test="test.testStarttime != '' and test.testStarttime != null">
+            a.test_starttime = #{test.testStarttime,jdbcType=VARCHAR}and
+        </if>
+        <if test="test.testClass != null and test.testClass!=0">
+            a.test_class = #{test.testClass,jdbcType=INTEGER}  and
+        </if>
+        <if test="test.testTeacher != null and test.testTeacher!=0">
+            a.test_teacher = #{test.testTeacher,jdbcType=INTEGER}  and
+        </if>
+         a.test_state=0
+    </select>
+
+    <select id="selectById" resultType="cn.edu.cczu.zxks.entity.Test">
+        select * from tb_test where
+        test_id=#{id}
+    </select>
+
+    <select id="selectTestList" resultType="cn.edu.cczu.zxks.entity.Test">
+        SELECT a.test_id as testId,a.test_title as testTitle,a.test_starttime as testStarttime,a.test_endtime as testEndtime,
+        b.class_name as testClass1,c.subject_name as testSubject1
+        FROM tb_test AS a
+        LEFT JOIN tb_class AS b ON a.test_class=b.class_id
+        LEFT JOIN tb_subject AS c ON a.test_subject=c.subject_id
+        LEFT JOIN tb_test_student As d on a.test_id=d.test_id
+        where
+        a.test_state=0 and d.test_student_state=0 and d.student_id=#{studentId}
+         and a.test_endtime>= #{time} and #{time}> a.test_starttime
+    </select>
+
+
+
+
+
+</mapper>
